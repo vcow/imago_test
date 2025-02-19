@@ -25,7 +25,6 @@ namespace RoomScene
 				Mathf.Clamp((anchorRotation.y > 180f ? anchorRotation.y - 360f : anchorRotation.y) + horizontalOffset,
 					_horizontalAngleLimits.x, _horizontalAngleLimits.y),
 				0f);
-			Debug.Log($"{anchorRotation} -> {newRotation}");
 			_cameraAnchor.localRotation = Quaternion.Euler(newRotation);
 		}
 

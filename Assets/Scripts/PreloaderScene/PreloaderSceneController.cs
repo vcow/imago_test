@@ -12,7 +12,7 @@ namespace PreloaderScene
 		private async void Start()
 		{
 			await InitializeGame();
-			_sceneLoader.LoadSceneAsync(Const.RoomSceneName);
+			await _sceneLoader.LoadSceneAsync(Const.RoomSceneName);
 		}
 
 		private UniTask InitializeGame()
