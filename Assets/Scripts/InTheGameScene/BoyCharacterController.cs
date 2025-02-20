@@ -1,7 +1,10 @@
+using System;
+using InTheGameScene.Signals;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using Zenject;
 
 namespace InTheGameScene
 {
@@ -10,7 +13,20 @@ namespace InTheGameScene
 	{
 		[SerializeField] private NavMeshAgent _character;
 
+		[Inject] private readonly SignalBus _signalBus;
+
 		private Vector2 _moveValue;
+		private bool _youDead;
+
+		private void Start()
+		{
+			_signalBus.Subscribe<GameOverSignal>(OnGameOver);
+		}
+
+		private void OnGameOver()
+		{
+			_youDead = true;
+		}
 
 		public void OnMove(InputAction.CallbackContext context)
 		{
@@ -19,8 +35,18 @@ namespace InTheGameScene
 
 		private void Update()
 		{
+			if (_youDead)
+			{
+				return;
+			}
+
 			var position = transform.position;
 			_character.destination = new Vector3(position.x + _moveValue.x, position.y + _moveValue.y, 0f);
+		}
+
+		private void OnDestroy()
+		{
+			_signalBus.Unsubscribe<GameOverSignal>(OnGameOver);
 		}
 
 		private void OnValidate()

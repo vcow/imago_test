@@ -1,3 +1,4 @@
+using InTheGameScene.Signals;
 using UnityEngine;
 using Zenject;
 
@@ -8,6 +9,8 @@ namespace InTheGameScene
 	{
 		public override void InstallBindings()
 		{
+			Container.DeclareSignal<UIMessageSignal>();
+			Container.DeclareSignal<GameOverSignal>();
 		}
 	}
 }

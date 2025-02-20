@@ -1,4 +1,5 @@
 using System;
+using InTheGameScene.Signals;
 using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,6 +16,7 @@ namespace InTheGameScene
 		[SerializeField] private NavMeshAgent _character;
 
 		[Inject] private readonly BoyCharacterController _victim;
+		[Inject] private readonly SignalBus _signalBus;
 
 		private IDisposable _timerHandler;
 
@@ -40,7 +42,7 @@ namespace InTheGameScene
 				_timerHandler = null;
 				_character.isStopped = true;
 
-				// TODO: Game over
+				_signalBus.TryFire<GameOverSignal>();
 			}
 		}
 

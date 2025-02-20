@@ -1,5 +1,7 @@
 using System;
+using InTheGameScene.Signals;
 using UniRx;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Zenject;
@@ -13,8 +15,10 @@ namespace InTheGameScene
 		[SerializeField] private MonstroCharacterController _monstroPrefab;
 		[SerializeField] private BoyCharacterController _victim;
 		[SerializeField] private float _maxDelayTimeToSpawn;
+		[SerializeField] private CinemachineTargetGroup _targetGroup;
 
 		[Inject] private readonly DiContainer _container;
+		[Inject] private readonly SignalBus _signalBus;
 
 		private bool _monstroIsSpawned;
 		private IDisposable _spawnTimerHandler;
@@ -63,9 +67,13 @@ namespace InTheGameScene
 
 		private void Spawn()
 		{
-			var monstro = _container.InstantiatePrefabForComponent<MonstroCharacterController>(_monstroPrefab, new object[] {_victim});
-			monstro.transform.position = transform.position;
+			var monstro = _container.InstantiatePrefabForComponent<MonstroCharacterController>(_monstroPrefab, new object[] { _victim });
+			var monstroTransform = monstro.transform;
+			monstroTransform.position = transform.position;
+			_targetGroup.AddMember(monstroTransform, 0.5f, 0.5f);
 			_monstroIsSpawned = true;
+
+			_signalBus.TryFire(new UIMessageSignal("Beware of the terrible monster!"));
 		}
 
 		private void OnDestroy()
@@ -77,6 +85,7 @@ namespace InTheGameScene
 		{
 			Assert.IsNotNull(_monstroPrefab, "_monstroPrefab != null");
 			Assert.IsNotNull(_victim, "_victim != null");
+			Assert.IsNotNull(_targetGroup, "_targetGroup != null");
 		}
 	}
 }
