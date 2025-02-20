@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace InTheGameScene
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(PlayerInput))]
+	[DisallowMultipleComponent, RequireComponent(typeof(PlayerInput), typeof(Collider2D))]
 	public class BoyCharacterController : MonoBehaviour
 	{
 		[SerializeField] private NavMeshAgent _character;
